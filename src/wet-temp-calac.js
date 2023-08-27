@@ -10,5 +10,4 @@ function wetTempCalc(DT, RH) {
     return WT
 }
 
-
 console.log("Result:", wetTempCalc(38, 65));
