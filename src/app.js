@@ -10,7 +10,7 @@ const HT_NAME= "Balcony";
 //const DEVICE_ID= "c049ef8b1370" ;     // HT Gen2 
 //const HT_NAME= "Bedroom"; /* Optional */
 /*******************************************************************************/
-const TIMER_RECALL_IN_MINUTES=0.25;  // optional
+const TIMER_RECALL_IN_MINUTES=5;  // optional
 /*******************************************************************************/
 //           B e g i n  of  P r o g r a m e
 let urlHT=SERVER+"/device/status?id=" + DEVICE_ID+ "&auth_key=" + AUTH_KEY; 
