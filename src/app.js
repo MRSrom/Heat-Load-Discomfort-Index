@@ -1,20 +1,17 @@
-//******************  U S E R   Definitions   ***************************
-const SERVER = "";
-const AUTH_KEY = "";
-/********************************************************************************/
+/******************  U S E R   Definitions   ***************************/
+const SERVER = "";    /* Fill here your Server Address - use Shelly app */
+const AUTH_KEY = ""; /* Fill here your Authentication Key - use Shelly app */
+//
 const HT_TYPE= "HT"; /*"HT" for Gen 1 ---OR --- "HTP" for Gen2 */
-const DEVICE_ID = "439fa1" ; 
-const HT_NAME= "Balcony"; 
-    // OR
-//const HT_TYPE= "HTP"; // "HT" for Gen1 or "HTP" for Gen2
-//const DEVICE_ID= "c049ef8b1370" ;     // HT Gen2 
-//const HT_NAME= "Bedroom"; /* Optional */
-/*******************************************************************************/
-const TIMER_RECALL_IN_MINUTES=5;  // optional
-/*******************************************************************************/
+const DEVICE_ID = "439fa1" ;  /* Change here device id */
+const HT_NAME= "Balcony";  /* Change here device name */
+//
+const TIMER_RECALL_IN_MINUTES=5;  /* Change here time interval - in minutes */
+//
+/******************  E N D   U S E R   Definitions   ***************************/
 //           B e g i n  of  P r o g r a m e
 let urlHT=SERVER+"/device/status?id=" + DEVICE_ID+ "&auth_key=" + AUTH_KEY; 
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//
  function wetTempCalc(DT,RH){  
 //Estimate the Wet-Bulb Temperature using Dry Temperature (DT) and Relative Humidity (RH) via the Stull formula [Stull(2011)]
   let coef=[0.151977,8.313659,1.676331,0.00391838,0.023101,4.686035];
@@ -26,13 +23,13 @@ let urlHT=SERVER+"/device/status?id=" + DEVICE_ID+ "&auth_key=" + AUTH_KEY;
   let WT=arg1+arg2-arg3+arg4-arg5;
   return WT
 }
-//----------------------------------------------------------------------
+//
 function heatLoadDiscofortIndex(temperature,humidity){
- let wetTemp=wetTempCalc(temperature,humidity);
- let HLI=0.5*(wetTemp+temperature).toFixed(1);
- return(HLI);
+  let wetTemp=wetTempCalc(temperature,humidity);
+  let HLI=0.5*(wetTemp+temperature);
+  return([wetTemp.toFixed(1),HLI.toFixed(1)]);
 }
-///////////////////////////////////////////////////////////////////////////////////////////
+//
 function disComfortStatus(DI){
  let status="No Heat Sress! ";
  if (DI > 22 & DI <= 24){
@@ -49,7 +46,7 @@ function disComfortStatus(DI){
  }
    return(status);
 }
- //------------------------------------------------------------------------------------------
+ //
 function SensorHT(sensorData){  
    Shelly.call("HTTP.GET",{"url":sensorData.url},function(result){
      let response=JSON.parse(result.body);
@@ -64,16 +61,18 @@ function SensorHT(sensorData){
         let time=response.data.device_status.sys.time;    
         let deviceTemp=response.data.device_status["temperature:0"].tC;
         let deviceHumid=response.data.device_status["humidity:0"].rh;
-    }   else { 
+    }   else { /* in case of wrong key input */ 
           console.log("Wrong Sensor Type");
           Timer.clear(T1);
           return;
     }
-     let heatDI=heatLoadDiscofortIndex(deviceTemp,deviceHumid);
-     let heatStatus=disComfortStatus(heatDI);
-     
-     console.log(sensorData.id+":   Time: "+time+",  Heat Load Discomfort Index:",heatDI,",  Staus:",heatStatus);
-  });
+    let WT_DI=heatLoadDiscofortIndex(deviceTemp,deviceHumid);
+    let WT=WT_DI[0];
+    let DI=WT_DI[1];
+    let heatStatus=disComfortStatus(DI);
+    
+    console.log(sensorData.id+":   Time: "+time+",  Wet Bulb Temperature:",WT,",  Heat Load Discomfort Index:",DI,",  Staus:",heatStatus);
+ });
 }
 // Constructors of Sensors
 function sensorConstruct(url,type,id){
