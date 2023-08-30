@@ -1,10 +1,10 @@
 /******************  U S E R   Definitions   ***************************/
-const SERVER = "";    /* Fill here your Server Address - use Shelly app */
-const AUTH_KEY = ""; /* Fill here your Authentication Key - use Shelly app */
+const SERVER = "...";    /* Fill here your Server Address - use Shelly app to find this property */
+const AUTH_KEY = "..."; /* Fill here your Authentication Key - use Shelly app to find this property */
 //
-const HT_TYPE= "HT"; /*"HT" for Gen 1 ---OR --- "HTP" for Gen2 */
-const DEVICE_ID = "439fa1" ;  /* Change here device id */
-const HT_NAME= "Balcony";  /* Change here device name */
+const HT_TYPE= "HT"; /*"HT" for Gen 1 (Shelly HT) ---OR --- "HTP" for Gen2  (Shelly Plus HT) */
+const DEVICE_ID = "..." ;  /* Change here device id - use Shelly app to find this property */
+const HT_NAME= "...";  /* pick your own device name */
 //
 const TIMER_RECALL_IN_MINUTES=5;  /* Change here time interval - in minutes */
 //
@@ -25,12 +25,15 @@ let urlHT=SERVER+"/device/status?id=" + DEVICE_ID+ "&auth_key=" + AUTH_KEY;
 }
 //
 function heatLoadDiscofortIndex(temperature,humidity){
+// Return the Wet-Bulb temperature and the Discomfort Index  
   let wetTemp=wetTempCalc(temperature,humidity);
   let HLI=0.5*(wetTemp+temperature);
   return([wetTemp.toFixed(1),HLI.toFixed(1)]);
 }
 //
 function disComfortStatus(DI){
+// Categorize DI into hierarchy status categories. 
+//Based on Epstein & Moran (2006) with update for the highest category.
  let status="No Heat Sress! ";
  if (DI > 22 & DI <= 24){
    status=" Mild Heat Discomfort";
@@ -42,7 +45,7 @@ function disComfortStatus(DI){
    status=" Severe Heat Discomfort";
  }
   if (DI > 32){
-   status=" Extremely Heat Conditions  ";
+   status=" Extreme Dangerous Heat Conditions  ";
  }
    return(status);
 }
