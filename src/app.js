@@ -55,12 +55,10 @@ function SensorHT(sensorData){
      let response=JSON.parse(result.body);
 // 
     if (sensorData.type=="HT"){  /* Gen1 HT Sensors */
-     let unixTime=response.data.device_status.unixtime;
      let time=response.data.device_status.time;    
      let deviceTemp=response.data.device_status.tmp.tC;
      let deviceHumid=response.data.device_status.hum.value;
     } else if (sensorData.type=="HTP"){ /* Gen2 HT Plus Sensors */
-        let unixTime=response.data.device_status.sys.unixtime;
         let time=response.data.device_status.sys.time;    
         let deviceTemp=response.data.device_status["temperature:0"].tC;
         let deviceHumid=response.data.device_status["humidity:0"].rh;
