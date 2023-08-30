@@ -71,7 +71,9 @@ function SensorHT(sensorData){
     let DI=WT_DI[1];
     let heatStatus=disComfortStatus(DI);
     
-    console.log(sensorData.id+":   Time: "+time+",  Wet Bulb Temperature:",WT,",  Discomfort Index:",DI,",  Status:",heatStatus);
+    console.log(sensorData.id+":   Time: "+time+",  *** "+heatStatus+" *** (DI: "+DI+")");
+    console.log("Device Temperature: "+deviceTemp+",  Device Humidity: "+deviceHumid+",  Wet-Bulb Temperature: "+WT);
+    console.log("");
  });
 }
 // Constructors of Sensors
