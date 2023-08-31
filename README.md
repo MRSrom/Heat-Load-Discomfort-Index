@@ -1,1 +1,0 @@
-# Heat-Load-Discomfort-Index
